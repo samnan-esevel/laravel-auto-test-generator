@@ -25,8 +25,8 @@ class Formatter
         $this->directory = $directory;
         $this->sync = $sync;
         $this->file = __DIR__.'/Test/UserTest.php';
-        $this->namespace = 'namespace Tests\Feature' . ($this->directory ? '\\' . $this->directory : '') . ';';
-        $this->destinationFilePath = base_path('tests/Feature/' . $this->directory);
+        $this->namespace = 'namespace Tests\Auto' . ($this->directory ? '\\' . $this->directory : '') . ';';
+        $this->destinationFilePath = base_path('tests/Auto/' . $this->directory);
         $this->cases = [];
     }
 
@@ -128,6 +128,11 @@ class Formatter
     protected function formatFile()
     {
         foreach ($this->cases as $key => $value) {
+            $functions = [];
+            foreach($value['function'] as $fn) {
+                $functions[$fn['name']] = $fn;
+            }
+            $value['function'] = $functions;
             $lines = file($this->file, FILE_IGNORE_NEW_LINES);
             $lines[2] = $this->namespace;
             $lines[8] = $this->getClassName($key, $lines[8]);
