@@ -51,9 +51,18 @@ class Generator
      */
     protected function getRouteMethods()
     {
-        foreach ($this->getAppRoutes() as $route) {
+        $done = [];
+        foreach ($this->getAppRoutes() as $key => $route) {
             $this->originalUri = $uri = $this->getRouteUri($route);
             $this->uri = $this->strip_optional_char($uri);
+
+            $this->uri = str_replace(config('tenancy.central_domains'), ['localhost'], $this->uri);
+
+            if(in_array($this->uri, $done)) {
+                continue;
+            }
+
+            $done[] = $this->uri;
 
             if ($this->routeFilter && !preg_match('/^' . preg_quote($this->routeFilter, '/') . '/', $this->uri)) {
                 continue;
